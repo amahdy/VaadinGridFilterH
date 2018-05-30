@@ -1,0 +1,70 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="vaadin-grid-filter-h">
+  <template>
+    <style>
+      .highlight {
+        background-color: yellow;
+      }
+    </style>
+    <span inner-h-t-m-l="[[display]]"></span>
+  </template>
+
+  <script>
+    /**
+     * `vaadin-grid-filter-h`
+     * Hilight all occurences in vaadin-grid given by vaadin-grid-filter
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+     class VaadinGridFilterH extends Polymer.Element {
+      static get is() { return 'vaadin-grid-filter-h'; }
+      static get properties() {
+        return {
+          item: {
+            type: String,
+            observer: '_itemChanged'
+          },
+          isDifferentItem: {
+            type: Boolean,
+            value: false
+          },
+          filter: {
+            type: String,
+            observer: '_filterChanged'
+          },
+          display: {
+            type: String
+          }
+        };
+      }
+
+      _displayDefault() {
+        this.display = this.item;
+      }
+
+      _itemChanged() {
+        this._filterChanged();
+      }
+
+      _filterChanged() {
+        if(!(this.filter && this.item)) {
+          this._displayDefault();
+          return;
+        }
+
+        let expression = RegExp('('+this.filter+')', 'ig');
+        if(this.item.match(expression)) {
+          this.display = this.item.replace(
+            expression,
+            '<span class="highlight">$1</span>'
+          );
+        }else {
+          this._displayDefault();
+        }
+      }
+    }
+  </script>
+</dom-module>
